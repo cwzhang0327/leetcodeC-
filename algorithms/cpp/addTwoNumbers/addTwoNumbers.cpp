@@ -22,39 +22,54 @@
  * };
  */
 class Solution {
-    
 public:
-    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
-        int x=0, y=0, carry=0, sum=0;
-        ListNode *h=NULL, **t=&h;
-        
-        while (l1!=NULL || l2!=NULL){
-            x = getValueAndMoveNext(l1);
-            y = getValueAndMoveNext(l2);
-            
-            sum = carry + x + y;
-            
-            ListNode *node = new ListNode(sum%10);
-            *t = node;
-            t = (&node->next);
-            
-            carry = sum/10;
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        //variable initialization
+        ListNode* tempNode = new ListNode;
+        ListNode* tail = tempNode;
+        int digit1, digit2, carry = 0;
+
+        //loop to add numbers and create new list
+        while(l1 != nullptr or l2 != nullptr or carry != 0){ //stops when at end of both lists and no carry
+            if(l1 != nullptr){
+                digit1 = l1 -> val;
+            }
+            else{
+                digit1 = 0;
+            }
+
+            if(l2 != nullptr){
+                digit2 = l2 -> val;
+            }
+            else{
+                digit2 = 0;
+            }
+
+            // sum = digit in both linked list plus if there was a carry
+            int sum = digit1 + digit2 + carry;
+            // digit in new linked list, will cap at 9
+            int digit = sum % 10;
+            // carry over a 1 if sum is greater than 10
+            if(sum >= 10){
+                carry = 1;
+            }
+            else{
+                carry = 0;
+            }
+
+            tail -> next = new ListNode(digit);
+            tail = tail -> next;
+
+            if (l1 != nullptr) {
+                l1 = l1 -> next;
+            }
+            if (l2 != nullptr){
+                l2 = l2 -> next;
+            }
         }
-        
-        if (carry > 0) {
-            ListNode *node = new ListNode(carry%10);
-            *t = node;
-        }
-        
-        return h;
-    }
-private:
-    int getValueAndMoveNext(ListNode* &l){
-        int x = 0;
-        if (l != NULL){
-            x = l->val;
-            l = l->next;
-        }
-        return x;
+        ListNode* result = tempNode -> next;
+        //free memory from temp node
+        delete tempNode;
+        return result;
     }
 };
